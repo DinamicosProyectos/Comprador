@@ -67,7 +67,7 @@
 </head>
 <body>
     <h1>Realizar una Compra</h1>
-    <h2>Precio por KG: 5</h2>
+    <h2>Precio por unidad: $5</h2>
 
     <label for="producto">Esparraguero:</label>
     <input type="text" id="producto" placeholder="Esparraguero"><br>
@@ -92,7 +92,7 @@
                 document.getElementById('subtotal').value = '';
             } else {
                 const subtotal = cantidad * precio;
-                document.getElementById('subtotal').value = {subtotal};
+                document.getElementById('subtotal').value = `${subtotal}`;
             }
         }
 
@@ -134,7 +134,7 @@
             mostrarCompras();
         }
 
-        function mostrarCompras() {
+        function mostrarCompras2() {
             const comprasList = document.getElementById('comprasList');
             comprasList.innerHTML = '';
 
@@ -160,7 +160,35 @@
                 comprasList.appendChild(li);
             }
         }
+function mostrarCompras() {
+        const comprasList = document.getElementById('comprasList');
+        comprasList.innerHTML = '';
 
+        for (let i = 0; i < localStorage.length; i++) {
+            const fecha = localStorage.key(i);
+            const compras = JSON.parse(localStorage.getItem(fecha));
+
+            const li = document.createElement('li');
+            li.innerHTML = `<label class="total">Fecha: ${fecha}</label>`;
+            const ul = document.createElement('ul');
+
+            let totalFecha = 0;
+            let totalKg = 0;
+
+            compras.forEach(compra => {
+                const liCompra = document.createElement('li');
+                liCompra.innerHTML = `Esparraguero: ${compra.producto}, Cant: ${compra.cantidad}, Precio: ${compra.precio}, Total: ${compra.costoTotal}`;
+                ul.appendChild(liCompra);
+                totalFecha += compra.costoTotal;
+                totalKg += compra.cantidad;
+            });
+
+            li.appendChild(ul);
+            li.innerHTML += `<label class="total">Total del Día: $${totalFecha}</label>`;
+            li.innerHTML += `<label class="total">Total de KG: ${totalKg} kg</label>`;
+            comprasList.appendChild(li);
+        }
+    }
         function obtenerFechaActual() {
             const now = new Date();
             const year = now.getFullYear();
@@ -175,6 +203,10 @@
     </script>
 </body>
 </html>
+
+
+
+
 
 
 
