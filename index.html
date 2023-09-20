@@ -63,11 +63,24 @@
             font-weight: bold;
             color: red;
         }
+
+        .compra-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .compra-nombre,
+        .compra-cantidad,
+        .compra-precio {
+            font-size: 24px;
+        }
     </style>
 </head>
 <body>
     <h1>Realizar una Compra</h1>
-    <h2>Precio por unidad: $5</h2>
+    <h2>Precio por KG: $5</h2>
 
     <label for="producto">Esparraguero:</label>
     <input type="text" id="producto" placeholder="Esparraguero"><br>
@@ -92,7 +105,7 @@
                 document.getElementById('subtotal').value = '';
             } else {
                 const subtotal = cantidad * precio;
-                document.getElementById('subtotal').value = `${subtotal}`;
+                document.getElementById('subtotal').value = `${subtotal.toFixed(2)}`;
             }
         }
 
@@ -111,7 +124,7 @@
 
             const compra = {
                 producto,
-                cantidad: parseInt(cantidad),
+                cantidad: parseFloat(cantidad),
                 precio,
                 costoTotal
             };
@@ -134,7 +147,7 @@
             mostrarCompras();
         }
 
-        function mostrarCompras2() {
+        function mostrarCompras() {
             const comprasList = document.getElementById('comprasList');
             comprasList.innerHTML = '';
 
@@ -147,55 +160,37 @@
                 const ul = document.createElement('ul');
 
                 let totalFecha = 0;
+                let totalKg = 0;
 
                 compras.forEach(compra => {
                     const liCompra = document.createElement('li');
-                    liCompra.innerHTML = `Esparraguero: ${compra.producto}, Cant: ${compra.cantidad}, Precio: ${compra.precio}, Total: ${compra.costoTotal}`;
+                    const costoTotalFormatted = compra.costoTotal.toFixed(2);
+                    const precioFormatted = compra.precio.toFixed(2);
+                    liCompra.innerHTML = `
+                        <div class="compra-item">
+                            <span class="compra-nombre">${compra.producto}</span>
+                            <span class="compra-cantidad">${compra.cantidad.toFixed(2)} kg</span>
+                            <span class="compra-precio">$${precioFormatted}</span>
+                        </div>
+                        <div class="compra-total">$${costoTotalFormatted}</div>
+                    `;
                     ul.appendChild(liCompra);
                     totalFecha += compra.costoTotal;
+                    totalKg += compra.cantidad;
                 });
 
+                const totalFechaFormatted = totalFecha.toFixed(2);
                 li.appendChild(ul);
-                li.innerHTML += `<label class="total">Total del Dia: ${totalFecha}</label>`;
+                li.innerHTML += `<label class="total">Total del Día: $${totalFechaFormatted}</label>`;
+                li.innerHTML += `<label class="total">Total de KG: ${totalKg.toFixed(2)} kg</label>`;
                 comprasList.appendChild(li);
             }
         }
-function mostrarCompras() {
-    const comprasList = document.getElementById('comprasList');
-    comprasList.innerHTML = '';
 
-    for (let i = 0; i < localStorage.length; i++) {
-        const fecha = localStorage.key(i);
-        const compras = JSON.parse(localStorage.getItem(fecha));
-
-        const li = document.createElement('li');
-        li.innerHTML = `<label class="total">Fecha: ${fecha}</label>`;
-        const ul = document.createElement('ul');
-
-        let totalFecha = 0;
-        let totalKg = 0;
-
-        compras.forEach(compra => {
-            const liCompra = document.createElement('li');
-            const costoTotalFormatted = compra.costoTotal.toFixed(2); // Formatear a dos decimales
-            const precioFormatted = compra.precio.toFixed(2); // Formatear a dos decimales
-            liCompra.innerHTML = `Esparraguero: ${compra.producto}, Cant: ${compra.cantidad} kg, Precio: $${precioFormatted}, Total: $${costoTotalFormatted}`;
-            ul.appendChild(liCompra);
-            totalFecha += compra.costoTotal;
-            totalKg += compra.cantidad;
-        });
-
-        const totalFechaFormatted = totalFecha.toFixed(2); // Formatear a dos decimales
-        li.appendChild(ul);
-        li.innerHTML += `<label class="total">Total del Día: $${totalFechaFormatted}</label>`;
-        li.innerHTML += `<label class="total">Total de KG: ${totalKg.toFixed(2)} kg</label>`; // Formatear a dos decimales
-        comprasList.appendChild(li);
-    }
-}
         function obtenerFechaActual() {
             const now = new Date();
             const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0'); // Añadir 1 porque los meses comienzan en 0
+            const month = String(now.getMonth() + 1).padStart(2, '0');
             const day = String(now.getDate()).padStart(2, '0');
 
             return `${year}-${month}-${day}`;
@@ -206,7 +201,6 @@ function mostrarCompras() {
     </script>
 </body>
 </html>
-
 
 
 
