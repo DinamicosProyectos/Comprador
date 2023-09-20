@@ -104,8 +104,8 @@
             if (!cantidad || cantidad <= 0) {
                 document.getElementById('subtotal').value = '';
             } else {
-                const subtotal = cantidad * precio;
-                document.getElementById('subtotal').value = `${subtotal.toFixed(2)}`;
+                const subtotal = (cantidad * precio).toFixed(2);
+                document.getElementById('subtotal').value = `$${subtotal}`;
             }
         }
 
@@ -119,7 +119,7 @@
             }
 
             const precio = 5; // Precio estándar por unidad
-            const costoTotal = cantidad * precio;
+            const costoTotal = (cantidad * precio).toFixed(2);
             const fecha = obtenerFechaActual();
 
             const compra = {
@@ -164,24 +164,25 @@
 
                 compras.forEach(compra => {
                     const liCompra = document.createElement('li');
-                    const costoTotalFormatted = compra.costoTotal.toFixed(2);
-                    const precioFormatted = compra.precio.toFixed(2);
+                    const costoTotalFormatted = `$${compra.costoTotal}`;
+                    const cantidadFormatted = `${compra.cantidad.toFixed(2)} kg`;
+                    const precioFormatted = `$${compra.precio.toFixed(2)}`;
                     liCompra.innerHTML = `
                         <div class="compra-item">
                             <span class="compra-nombre">${compra.producto}</span>
-                            <span class="compra-cantidad">${compra.cantidad.toFixed(2)} kg</span>
-                            <span class="compra-precio">$${precioFormatted}</span>
+                            <span class="compra-cantidad">${cantidadFormatted}</span>
+                            <span class="compra-precio">${precioFormatted}</span>
                         </div>
-                        <div class="compra-total">$${costoTotalFormatted}</div>
+                        <div class="compra-total">${costoTotalFormatted}</div>
                     `;
                     ul.appendChild(liCompra);
-                    totalFecha += compra.costoTotal;
-                    totalKg += compra.cantidad;
+                    totalFecha += parseFloat(compra.costoTotal);
+                    totalKg += parseFloat(compra.cantidad);
                 });
 
-                const totalFechaFormatted = totalFecha.toFixed(2);
+                const totalFechaFormatted = `$${totalFecha.toFixed(2)}`;
                 li.appendChild(ul);
-                li.innerHTML += `<label class="total">Total del Día: $${totalFechaFormatted}</label>`;
+                li.innerHTML += `<label class="total">Total del Día: ${totalFechaFormatted}</label>`;
                 li.innerHTML += `<label class="total">Total de KG: ${totalKg.toFixed(2)} kg</label>`;
                 comprasList.appendChild(li);
             }
@@ -201,13 +202,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
