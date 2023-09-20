@@ -161,34 +161,37 @@
             }
         }
 function mostrarCompras() {
-        const comprasList = document.getElementById('comprasList');
-        comprasList.innerHTML = '';
+    const comprasList = document.getElementById('comprasList');
+    comprasList.innerHTML = '';
 
-        for (let i = 0; i < localStorage.length; i++) {
-            const fecha = localStorage.key(i);
-            const compras = JSON.parse(localStorage.getItem(fecha));
+    for (let i = 0; i < localStorage.length; i++) {
+        const fecha = localStorage.key(i);
+        const compras = JSON.parse(localStorage.getItem(fecha));
 
-            const li = document.createElement('li');
-            li.innerHTML = `<label class="total">Fecha: ${fecha}</label>`;
-            const ul = document.createElement('ul');
+        const li = document.createElement('li');
+        li.innerHTML = `<label class="total">Fecha: ${fecha}</label>`;
+        const ul = document.createElement('ul');
 
-            let totalFecha = 0;
-            let totalKg = 0;
+        let totalFecha = 0;
+        let totalKg = 0;
 
-            compras.forEach(compra => {
-                const liCompra = document.createElement('li');
-                liCompra.innerHTML = `Esparraguero: ${compra.producto}, Cant: ${compra.cantidad}, Precio: ${compra.precio}, Total: ${compra.costoTotal}`;
-                ul.appendChild(liCompra);
-                totalFecha += compra.costoTotal;
-                totalKg += compra.cantidad;
-            });
+        compras.forEach(compra => {
+            const liCompra = document.createElement('li');
+            const costoTotalFormatted = compra.costoTotal.toFixed(2); // Formatear a dos decimales
+            const precioFormatted = compra.precio.toFixed(2); // Formatear a dos decimales
+            liCompra.innerHTML = `Esparraguero: ${compra.producto}, Cant: ${compra.cantidad} kg, Precio: $${precioFormatted}, Total: $${costoTotalFormatted}`;
+            ul.appendChild(liCompra);
+            totalFecha += compra.costoTotal;
+            totalKg += compra.cantidad;
+        });
 
-            li.appendChild(ul);
-            li.innerHTML += `<label class="total">Total del Día: $${totalFecha}</label>`;
-            li.innerHTML += `<label class="total">Total de KG: ${totalKg} kg</label>`;
-            comprasList.appendChild(li);
-        }
+        const totalFechaFormatted = totalFecha.toFixed(2); // Formatear a dos decimales
+        li.appendChild(ul);
+        li.innerHTML += `<label class="total">Total del Día: $${totalFechaFormatted}</label>`;
+        li.innerHTML += `<label class="total">Total de KG: ${totalKg.toFixed(2)} kg</label>`; // Formatear a dos decimales
+        comprasList.appendChild(li);
     }
+}
         function obtenerFechaActual() {
             const now = new Date();
             const year = now.getFullYear();
